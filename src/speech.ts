@@ -44,3 +44,35 @@ export function speak(text: string) {
   u.pitch = 1 // höhere Tonlage klingt bei den meisten Stimmen blechern
   synth.speak(u)
 }
+
+export function stopSpeaking() {
+  synth?.cancel()
+}
+
+/**
+ * Spricht einen Text und löst auf, sobald er zu Ende ist (oder abgebrochen wurde).
+ * Bricht NICHT vorher ab – für Sequenzen gedacht. Hat eine Sicherung, falls der
+ * Browser das "end"-Ereignis nie schickt, und funktioniert auch ganz ohne Sprachausgabe.
+ */
+export function speakAsync(text: string, opts: { rate?: number; pitch?: number } = {}): Promise<void> {
+  const fallbackMs = text.length * 90 + 800
+  return new Promise((resolve) => {
+    if (!synth) {
+      setTimeout(resolve, fallbackMs)
+      return
+    }
+    const u = new SpeechSynthesisUtterance(text)
+    u.lang = 'de-DE'
+    if (voice) u.voice = voice
+    u.rate = opts.rate ?? 0.95
+    u.pitch = opts.pitch ?? 1
+    const safety = setTimeout(resolve, fallbackMs * 3 + 3000)
+    const done = () => {
+      clearTimeout(safety)
+      resolve()
+    }
+    u.onend = done
+    u.onerror = done
+    synth.speak(u)
+  })
+}

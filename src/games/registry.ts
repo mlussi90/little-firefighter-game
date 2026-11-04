@@ -11,9 +11,8 @@ export const games: GameDefinition[] = [
     id: 'dispatch',
     title: 'Leitstelle',
     emoji: '📞',
-    description: 'Nimm die Notrufe an und schicke die Feuerwehr los!',
+    description: 'Nimm Notrufe an, hör gut zu und finde die wichtigen Infos!',
     color: '#e63946',
     component: lazy(() => import('./dispatch')),
-    comingSoon: true,
   },
 ]

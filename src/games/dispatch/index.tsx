@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { GameProps } from '../types'
 import type { Difficulty } from '../../types'
-import { speak } from '../../speech'
+import { speak, speakAsync, stopSpeaking } from '../../speech'
 import { useScore } from '../../score'
 import { baueRunde } from './engine'
 import { useCallPlayer } from './useCallPlayer'
-import { SLOTS, type Anruf, type Frage, type Kachel } from './types'
+import { SLOTS, type Anruf, type Frage } from './types'
 
 const GAME_ID = 'leitstelle'
 const PUNKTE: Record<Difficulty, number> = { easy: 10, medium: 15, hard: 20 }
@@ -46,31 +46,93 @@ function Transcript({ zeilen, current }: { zeilen: string[]; current: number }) 
   )
 }
 
-function Kacheln({
-  kacheln, richtig, gewaehlt, falsche, onWahl,
+const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
+
+// Anzahl sichtbarer Zeichen (Emoji-Gruppen zählen als eins) – steuert die Bildgröße der Kachel.
+const zeichen = (s: string) => {
+  try {
+    return [...new Intl.Segmenter().segment(s)].length
+  } catch {
+    return [...s].length
+  }
+}
+
+interface Option {
+  key: string
+  emoji: string
+  text: string
+}
+
+/**
+ * Liest erst die Frage und danach jede Antwort vor und hebt die gerade genannte Kachel hervor –
+ * damit auch Kinder, die noch nicht lesen können, alle Möglichkeiten kennenlernen.
+ */
+function useVorlesen(intro: string, labels: string[]) {
+  const [hot, setHot] = useState(-1)
+  const run = useRef(0)
+
+  const stop = useCallback(() => {
+    run.current++
+    stopSpeaking()
+    setHot(-1)
+  }, [])
+
+  const start = useCallback(async () => {
+    const id = ++run.current
+    stopSpeaking()
+    setHot(-1)
+    await speakAsync(intro)
+    for (let i = 0; i < labels.length; i++) {
+      if (run.current !== id) return
+      setHot(i)
+      await speakAsync(labels[i])
+      if (run.current !== id) return
+      await wait(250)
+    }
+    if (run.current === id) setHot(-1)
+  }, [intro, labels])
+
+  useEffect(() => {
+    start()
+    return () => {
+      run.current++
+      stopSpeaking()
+    }
+  }, [start])
+
+  return { hot, start, stop }
+}
+
+/** Große Bild-Kacheln; jede hat einen eigenen 🔊-Knopf zum Anhören. */
+function Auswahl({
+  items, richtig, gewaehlt, falsche, hot, onWahl, onHoeren,
 }: {
-  kacheln: (Kachel & { id?: string })[]
+  items: Option[]
   richtig: string
   gewaehlt: string | null
   falsche: Set<string>
-  onWahl: (text: string) => void
+  hot: number
+  onWahl: (key: string) => void
+  onHoeren: (i: number) => void
 }) {
   return (
     <div className="tiles">
-      {kacheln.map((k) => {
-        const klasse = gewaehlt === k.text ? 'right' : falsche.has(k.text) ? 'wrong' : ''
+      {items.map((k, i) => {
+        const klasse = gewaehlt === k.key ? 'right' : falsche.has(k.key) ? 'wrong' : ''
         return (
-          <button
-            key={k.text}
-            className={`tile ${klasse}`}
-            disabled={gewaehlt !== null || falsche.has(k.text)}
-            onClick={() => onWahl(k.text)}
-            aria-label={k.text}
-            data-richtig={k.text === richtig}
-          >
-            <span className="tile-emoji">{k.emoji}</span>
-            <span className="tile-text">{k.text}</span>
-          </button>
+          <div key={k.key} className={`tile-wrap ${hot === i ? 'hot' : ''}`}>
+            <button
+              className={`tile size-${Math.min(zeichen(k.emoji), 5)} ${klasse}`}
+              disabled={gewaehlt !== null || falsche.has(k.key)}
+              onClick={() => onWahl(k.key)}
+              aria-label={k.text}
+              data-richtig={k.key === richtig}
+            >
+              <span className="tile-emoji">{k.emoji}</span>
+              <span className="tile-text">{k.text}</span>
+            </button>
+            <button className="hear" onClick={() => onHoeren(i)} aria-label={`${k.text} vorlesen`}>🔊</button>
+          </div>
         )
       })}
     </div>
@@ -91,20 +153,21 @@ function FrageKarte({
   const [gewaehlt, setGewaehlt] = useState<string | null>(null)
   const timer = useRef<number>(undefined)
   const slot = SLOTS.find((s) => s.id === frage.slot)!
+  const items = useMemo<Option[]>(() => frage.kacheln.map((k) => ({ key: k.text, ...k })), [frage])
+  const labels = useMemo(() => items.map((i) => i.text), [items])
+  const { hot, start, stop } = useVorlesen(frage.text, labels)
 
-  useEffect(() => {
-    speak(frage.text)
-    return () => window.clearTimeout(timer.current)
-  }, [frage.text])
+  useEffect(() => () => window.clearTimeout(timer.current), [])
 
-  const wahl = (text: string) => {
-    if (text === frage.richtig) {
-      setGewaehlt(text)
+  const wahl = (key: string) => {
+    stop()
+    if (key === frage.richtig) {
+      setGewaehlt(key)
       speak(lob(name))
       onRichtig(falsche.size === 0)
       timer.current = window.setTimeout(onWeiter, 1600)
     } else {
-      setFalsche(new Set(falsche).add(text))
+      setFalsche(new Set(falsche).add(key))
       onFehler()
       speak('Nicht ganz. Versuch es nochmal!')
     }
@@ -112,12 +175,23 @@ function FrageKarte({
 
   return (
     <div className="frage">
-      <button className="frage-kopf" onClick={() => speak(frage.text)} title="Nochmal vorlesen">
+      <button className="frage-kopf" onClick={start} title="Nochmal vorlesen">
         <span className="frage-emoji">{slot.emoji}</span>
         <span>{frage.text}</span>
         <span>🔊</span>
       </button>
-      <Kacheln kacheln={frage.kacheln} richtig={frage.richtig} gewaehlt={gewaehlt} falsche={falsche} onWahl={wahl} />
+      <Auswahl
+        items={items}
+        richtig={frage.richtig}
+        gewaehlt={gewaehlt}
+        falsche={falsche}
+        hot={hot}
+        onWahl={wahl}
+        onHoeren={(i) => {
+          stop()
+          speak(items[i].text)
+        }}
+      />
     </div>
   )
 }
@@ -133,44 +207,45 @@ function FehltKarte({
   onWeiter: () => void
 }) {
   const [falsche, setFalsche] = useState<Set<string>>(new Set())
-  const [gewaehlt, setGewaehlt] = useState(false)
+  const [gewaehlt, setGewaehlt] = useState<string | null>(null)
   const frage = 'Welche Information hat der Anrufer vergessen?'
-  useEffect(() => speak(frage), [])
+  const items = useMemo<Option[]>(() => SLOTS.map((s) => ({ key: s.id, emoji: s.emoji, text: s.kurz })), [])
+  const labels = useMemo(() => items.map((i) => i.text), [items])
+  const { hot, start, stop } = useVorlesen(frage, labels)
+  const s = SLOTS.find((x) => x.id === fehlt)!
 
-  const wahl = (id: string) => {
-    if (id === fehlt) {
-      setGewaehlt(true)
-      const s = SLOTS.find((x) => x.id === id)!
+  const wahl = (key: string) => {
+    stop()
+    if (key === fehlt) {
+      setGewaehlt(key)
       speak(`${lob(name)} Das hat gefehlt. Du musst nachfragen: ${s.frage}`)
       onRichtig(falsche.size === 0)
     } else {
-      setFalsche(new Set(falsche).add(id))
+      setFalsche(new Set(falsche).add(key))
       onFehler()
       speak('Nicht ganz. Das wurde gesagt. Versuch es nochmal!')
     }
   }
 
-  const s = SLOTS.find((x) => x.id === fehlt)!
   return (
     <div className="frage">
-      <button className="frage-kopf" onClick={() => speak(frage)}>
+      <button className="frage-kopf" onClick={start}>
         <span className="frage-emoji">🤔</span>
         <span>{frage}</span>
         <span>🔊</span>
       </button>
-      <div className="tiles">
-        {SLOTS.map((x) => (
-          <button
-            key={x.id}
-            className={`tile ${gewaehlt && x.id === fehlt ? 'right' : falsche.has(x.id) ? 'wrong' : ''}`}
-            disabled={gewaehlt || falsche.has(x.id)}
-            onClick={() => wahl(x.id)}
-          >
-            <span className="tile-emoji">{x.emoji}</span>
-            <span className="tile-text">{x.kurz}</span>
-          </button>
-        ))}
-      </div>
+      <Auswahl
+        items={items}
+        richtig={fehlt}
+        gewaehlt={gewaehlt}
+        falsche={falsche}
+        hot={hot}
+        onWahl={wahl}
+        onHoeren={(i) => {
+          stop()
+          speak(items[i].text)
+        }}
+      />
       {gewaehlt && (
         <div className="nachfragen">
           <p>Hier musst du nachfragen:<br /><strong>„{s.frage}"</strong></p>

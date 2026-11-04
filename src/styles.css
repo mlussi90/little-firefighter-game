@@ -173,16 +173,29 @@ h1 { font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.05; margin: 0 0 .4rem; 
 }
 .frage-emoji { font-size: 3rem; }
 
-.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1.1rem; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.4rem; }
+.tile-wrap { position: relative; transition: transform .2s; }
+.tile-wrap.hot { transform: scale(1.07); }
+.tile-wrap.hot .tile { background: var(--yellow); box-shadow: 0 0 0 6px #fff, 0 8px 0 var(--ink); }
 .tile {
-  font: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: .3rem;
-  background: #fff; color: var(--ink); border: 6px solid var(--ink); border-radius: var(--radius);
-  box-shadow: 0 8px 0 var(--ink); padding: 1rem .6rem; transition: transform .1s;
+  font: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem;
+  width: 100%; min-height: 210px; background: #fff; color: var(--ink); border: 6px solid var(--ink); border-radius: var(--radius);
+  box-shadow: 0 8px 0 var(--ink); padding: 1rem .6rem .8rem; transition: transform .1s;
 }
 .tile:hover:not(:disabled) { transform: translateY(-4px) rotate(-1deg); }
 .tile:active:not(:disabled) { transform: translateY(6px); box-shadow: 0 2px 0 var(--ink); }
-.tile-emoji { font-size: 4.2rem; line-height: 1; }
-.tile-text { font-size: 1.3rem; font-weight: 800; }
+/* Das Bild ist die Hauptsache; der Text ist nur Zugabe für Leser. Größe je nach Anzahl der Symbole. */
+.tile-emoji { line-height: 1.05; font-size: 6rem; word-break: keep-all; }
+.tile.size-2 .tile-emoji { font-size: 4.4rem; }
+.tile.size-3 .tile-emoji { font-size: 3.4rem; }
+.tile.size-4 .tile-emoji { font-size: 2.7rem; }
+.tile.size-5 .tile-emoji { font-size: 2.3rem; }
+.tile-text { font-size: 1.05rem; font-weight: 700; opacity: .65; }
+.hear {
+  position: absolute; top: -12px; right: -12px; width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+  font-size: 1.5rem; line-height: 1; background: var(--blue); border: 4px solid var(--ink); box-shadow: 0 4px 0 var(--ink);
+}
+.hear:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
 .tile.wrong { opacity: .35; background: #ddd; animation: shake .4s; cursor: default; }
 .tile.right { background: #b7f0c2; border-color: #1b9c3e; animation: pop .6s; cursor: default; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }

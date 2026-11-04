@@ -24,15 +24,15 @@ const STANDARD_ABLENKER: Record<Slot, Kachel[]> = {
     { emoji: '🚉', text: 'Bahnhof' }, { emoji: '🏊', text: 'Schwimmbad' },
   ],
   was: [
-    { emoji: '🌊', text: 'Hochwasser' }, { emoji: '🌪️', text: 'Sturm' }, { emoji: '🐱', text: 'Katze auf dem Baum' },
+    { emoji: '🌊', text: 'Hochwasser' }, { emoji: '🌪️', text: 'Sturm' }, { emoji: '🐱🌳', text: 'Katze auf dem Baum' },
     { emoji: '⚡', text: 'Stromausfall' }, { emoji: '🛗', text: 'Aufzug steckt fest' },
   ],
   wieviele: [
-    { emoji: '👤', text: 'Eine Person' }, { emoji: '👫', text: 'Zwei Personen' }, { emoji: '👥', text: 'Drei Personen' },
-    { emoji: '👨‍👩‍👧‍👦', text: 'Vier Personen' }, { emoji: '🧑‍🤝‍🧑', text: 'Fünf Personen' },
+    { emoji: '🧑', text: 'Eine Person' }, { emoji: '🧑🧑', text: 'Zwei Personen' }, { emoji: '🧑🧑🧑', text: 'Drei Personen' },
+    { emoji: '🧑🧑🧑🧑', text: 'Vier Personen' }, { emoji: '🧑🧑🧑🧑🧑', text: 'Fünf Personen' },
   ],
   verletzung: [
-    { emoji: '🦴', text: 'Knochenbruch' }, { emoji: '🤕', text: 'Kopfverletzung' }, { emoji: '🩹', text: 'Schnittwunde' },
+    { emoji: '🦴💥', text: 'Knochenbruch' }, { emoji: '🤕', text: 'Kopfverletzung' }, { emoji: '🩸', text: 'Schnittwunde' },
     { emoji: '🥵', text: 'Hitzschlag' }, { emoji: '🐝', text: 'Insektenstich' },
   ],
   warten: [

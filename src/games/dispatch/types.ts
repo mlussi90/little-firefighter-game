@@ -6,7 +6,7 @@ export type Slot = 'wo' | 'was' | 'wieviele' | 'verletzung' | 'warten'
 export const SLOTS: { id: Slot; emoji: string; kurz: string; frage: string }[] = [
   { id: 'wo', emoji: '📍', kurz: 'Wo?', frage: 'Wo ist es passiert?' },
   { id: 'was', emoji: '❗', kurz: 'Was?', frage: 'Was ist passiert?' },
-  { id: 'wieviele', emoji: '👥', kurz: 'Wie viele?', frage: 'Wie viele Personen sind betroffen?' },
+  { id: 'wieviele', emoji: '🧑🧑🧑', kurz: 'Wie viele?', frage: 'Wie viele Personen sind betroffen?' },
   { id: 'verletzung', emoji: '🩹', kurz: 'Welche Verletzungen?', frage: 'Welche Verletzungen gibt es?' },
   { id: 'warten', emoji: '👂', kurz: 'Warten auf Rückfragen', frage: 'Was macht der Anrufer zum Schluss?' },
 ]

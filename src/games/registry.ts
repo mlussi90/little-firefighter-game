@@ -15,4 +15,12 @@ export const games: GameDefinition[] = [
     color: '#e63946',
     component: lazy(() => import('./dispatch')),
   },
+  {
+    id: 'danger-sort',
+    title: 'Gefahr oder sicher?',
+    emoji: '✋🧸',
+    description: 'Was ist zum Spielen und was nur für Erwachsene?',
+    color: '#2a9d8f',
+    component: lazy(() => import('./danger-sort')),
+  },
 ]

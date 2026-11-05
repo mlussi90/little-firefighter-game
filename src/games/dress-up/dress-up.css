@@ -1,0 +1,36 @@
+/* Feuerwehrmann ausrüsten */
+.du { width: 100%; }
+.du h2 { font-size: 2rem; margin: .4rem 0 1rem; }
+.du-alarm { text-align: center; font-size: 2rem; font-weight: 800; color: #e63946; animation: du-blink .8s steps(2) infinite; margin-bottom: .6rem; }
+@keyframes du-blink { 50% { opacity: .5; } }
+
+.du-board { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 700px) { .du-board { grid-template-columns: 280px 1fr; align-items: center; } }
+
+.du-figure { position: relative; height: 320px; background: linear-gradient(#ffe8b0, #f3d28a); border: 6px solid var(--ink); border-radius: var(--radius); box-shadow: 0 8px 0 var(--ink); }
+.du-body { position: absolute; left: 50%; top: 50px; transform: translateX(-50%); font-size: 9rem; line-height: 1; }
+.du-slot { position: absolute; line-height: 1; opacity: 0; transform: translateY(-60px) scale(1.6); pointer-events: none; transition: transform .5s cubic-bezier(.3,1.4,.5,1), opacity .3s; }
+.du-slot.on { opacity: 1; transform: none; }
+.du-slot.head { left: 50%; top: -2px; margin-left: -.5em; font-size: 4.4rem; }
+.du-slot.body { left: 50%; top: 130px; margin-left: -.5em; font-size: 4.6rem; }
+.du-slot.hands { left: 12%; top: 150px; font-size: 3.4rem; }
+.du-slot.feet { left: 50%; bottom: 14px; margin-left: -.5em; font-size: 3.6rem; }
+.du-bubble { position: absolute; top: 8px; right: 8px; font-size: 2.2rem; background: #fff; border: 4px solid var(--ink); border-radius: 22px; padding: .05em .3em; animation: pop .4s; }
+.du-progress { position: absolute; left: 0; right: 0; bottom: -2.6rem; text-align: center; font-size: 1.6rem; letter-spacing: .2em; }
+
+.du-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; margin-top: 2.8rem; touch-action: none; }
+@media (min-width: 700px) { .du-items { margin-top: 0; grid-template-columns: repeat(4, 1fr); } }
+.du-item { display: flex; flex-direction: column; align-items: center; gap: .2rem; min-height: 110px; padding: .6rem; background: #fff; border: 5px solid var(--ink); border-radius: 20px; box-shadow: 0 5px 0 var(--ink); cursor: grab; touch-action: none; user-select: none; transition: transform .2s, opacity .3s; font: inherit; }
+.du-item.drag { z-index: 10; transition: none; cursor: grabbing; position: relative; }
+.du-item.gone { opacity: 0; transform: scale(.2); pointer-events: none; }
+.du-item.shake { animation: shake .45s; background: #ffe0e0; }
+.du-icon { font-size: 3.2rem; line-height: 1; }
+.du-name { font-size: 1rem; font-weight: 700; text-align: center; }
+.du-pulse { animation: du-pulse 1s ease-in-out infinite; }
+@keyframes du-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+
+/* Gewonnen */
+.du-road { width: 100%; overflow: hidden; height: 9rem; border-bottom: 8px solid var(--ink); }
+.du-truck { font-size: 7rem; display: inline-block; animation: du-drive 3.2s ease-in both; }
+@keyframes du-drive { from { transform: translateX(-40vw) scaleX(-1); } to { transform: translateX(60vw) scaleX(-1); } }
+.du-siren { font-size: 3rem; animation: du-blink .5s steps(2) infinite; }

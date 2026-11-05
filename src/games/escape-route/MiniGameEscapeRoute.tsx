@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Difficulty } from '../../types'
 import { speak, speakAsync, stopSpeaking } from '../../speech'
 import { playGentle, playSuccess } from '../../sound'
+import { useReadAloud } from '../../useReadAloud'
 import './escape-route.css'
 
 /** Die Phasen als einfache State Machine: intro → smoke → hide → meet → completed */
@@ -76,6 +77,60 @@ const STEP_ICONS: { phase: 'smoke' | 'hide' | 'meet'; icon: string }[] = [
 ]
 const ORDER: EscapePhase[] = ['intro', 'smoke', 'hide', 'meet', 'completed']
 
+/** Antwortkacheln: liest Frage und alle Optionen automatisch vor und hebt die genannte Kachel hervor. */
+function OptionPicker({
+  intro, options, tried, chosen, hintRight, onChoose,
+}: {
+  intro: string
+  options: Option[]
+  tried: Set<string>
+  chosen: string | null
+  hintRight: boolean
+  onChoose: (o: Option) => void
+}) {
+  const labels = useMemo(() => options.map((o) => o.label), [options])
+  const { hot, start, stop } = useReadAloud(intro, labels)
+
+  return (
+    <>
+      <div className="center-stack" style={{ marginTop: '1.2rem' }}>
+        <button className="er-listen" onClick={start} aria-label="Nochmal vorlesen">🔊</button>
+      </div>
+      <div className="tiles er-options">
+        {options.map((o, i) => {
+          const cls = chosen === o.id ? 'right' : tried.has(o.id) ? 'wrong' : hintRight && o.ok ? 'er-pulse' : ''
+          return (
+            <div key={o.id} className={`tile-wrap ${hot === i ? 'hot' : ''}`}>
+              <button
+                className={`tile size-${symbols(o.icon)} ${cls}`}
+                disabled={chosen !== null || tried.has(o.id)}
+                onClick={() => {
+                  stop()
+                  onChoose(o)
+                }}
+                aria-label={o.label}
+              >
+                <span className="tile-emoji">{o.icon}</span>
+                <span className="tile-text">{o.label}</span>
+              </button>
+              <button
+                className="hear"
+                onClick={() => {
+                  stop()
+                  speak(o.label)
+                }}
+                aria-label={`${o.label} vorlesen`}
+              >
+                🔊
+              </button>
+            </div>
+          )
+        })}
+      </div>
+    </>
+  )
+}
+
 export function MiniGameEscapeRoute({ difficulty = 'easy', playerName = '', onFinish, onScoreUpdate }: MiniGameEscapeRouteProps) {
   const [phase, setPhase] = useState<EscapePhase>('intro')
   const [score, setScore] = useState(0)
@@ -126,11 +181,9 @@ export function MiniGameEscapeRoute({ difficulty = 'easy', playerName = '', onFi
       }
       if (p === 'hide') {
         setOptions(hideOptions(difficulty))
-        speak('Im Zimmer brennt es. Wohin soll das Kind gehen?')
       }
       if (p === 'meet') {
         setOptions(meetOptions(difficulty))
-        speak('Geschafft, du bist draußen! Wo wartet ihr auf die Feuerwehr?')
       }
     },
     [difficulty],
@@ -280,26 +333,15 @@ export function MiniGameEscapeRoute({ difficulty = 'easy', playerName = '', onFi
             <div className="er-floor" />
             <div className="er-kid stand mid">🧒{bubble && <span className="er-bubble">{bubble}</span>}</div>
           </div>
-          <div className="tiles er-options">
-            {options.map((o) => {
-              const right = chosen === o.id
-              const cls = right ? 'right' : tried.has(o.id) ? 'wrong' : showHint && missedThisPhase.current && o.ok ? 'er-pulse' : ''
-              return (
-                <div key={o.id} className="tile-wrap">
-                  <button
-                    className={`tile size-${symbols(o.icon)} ${cls}`}
-                    disabled={chosen !== null || tried.has(o.id)}
-                    onClick={() => choose(o)}
-                    aria-label={o.label}
-                  >
-                    <span className="tile-emoji">{o.icon}</span>
-                    <span className="tile-text">{o.label}</span>
-                  </button>
-                  <button className="hear" onClick={() => speak(o.label)} aria-label={`${o.label} vorlesen`}>🔊</button>
-                </div>
-              )
-            })}
-          </div>
+          <OptionPicker
+            key={phase}
+            intro={phase === 'hide' ? 'Im Zimmer brennt es. Wohin soll das Kind gehen?' : 'Geschafft, du bist draußen! Wo wartet ihr auf die Feuerwehr?'}
+            options={options}
+            tried={tried}
+            chosen={chosen}
+            hintRight={showHint && tried.size > 0}
+            onChoose={choose}
+          />
         </>
       )}
     </div>

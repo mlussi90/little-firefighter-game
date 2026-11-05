@@ -48,7 +48,7 @@
 .er-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 1.6rem; }
 .er-big { min-height: 90px; font-size: 1.8rem; }
 .er-big.go { background: #b7f0c2; }
-.er-options { margin-top: 1.6rem; }
+.er-options { margin-top: .8rem; }
 .er-pulse { animation: hintpulse 1s ease-in-out infinite; }
 @keyframes hintpulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 

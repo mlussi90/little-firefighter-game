@@ -23,4 +23,12 @@ export const games: GameDefinition[] = [
     color: '#2a9d8f',
     component: lazy(() => import('./danger-sort')),
   },
+  {
+    id: 'escape-route',
+    title: 'Der Weg ins Freie',
+    emoji: '🏃🔥',
+    description: 'Was tun, wenn es brennt? Hilf dem Kind nach draußen!',
+    color: '#e76f51',
+    component: lazy(() => import('./escape-route')),
+  },
 ]

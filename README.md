@@ -12,6 +12,7 @@ Ein kleines Lernspiel für Kinder (Vorschul- und Grundschulalter) rund um Brands
 | ✋🧸 **Gefahr oder sicher?** | Gegenstände wie Kerze, Streichhölzer oder Teddybär werden vorgelesen. Sortiere sie: Ist das zum Spielen (sicher) oder nur für Erwachsene (gefährlich)? |
 | 🏃🔥 **Der Weg ins Freie** | Es brennt und es qualmt! Hilf dem Kind, richtig zu handeln: Rauch steigt nach oben, also unten bleiben und krabbeln, zur Tür gehen und zum Sammelplatz laufen. |
 | 🧑‍🚒⛑️ **Ausrüsten** | Alarm! Zieh der Figur die richtige Feuerwehr-Ausrüstung an (Helm, Jacke, Stiefel, Handschuhe). Tippe die Teile an oder zieh sie auf die Figur. Lustige Falsch-Teile wie Badehose oder Partyhut gehören nicht dazu. Sind alle richtigen Teile angezogen, fährt das Feuerwehrauto mit Martinshorn los. |
+| 🪜🔦 **Das richtige Werkzeug** | Ein Einsatz wird gezeigt und vorgelesen (Feuer im Gebüsch, Katze auf dem Baum, dunkler Keller, Ölfleck …). Tippe unter 3 Werkzeugen das passende an. Stimmt es, löst sich das Problem auf. Es werden 5 Runden gespielt. |
 
 ## So wird gespielt
 
@@ -50,7 +51,8 @@ src/
 │   ├── dispatch/          # Leitstelle (Engine, Szenarien, Anruf-Wiedergabe)
 │   ├── danger-sort/       # Gefahr oder sicher?
 │   ├── escape-route/      # Der Weg ins Freie
-│   └── dress-up/          # Ausrüsten
+│   ├── dress-up/          # Ausrüsten
+│   └── tool-matching/     # Das richtige Werkzeug
 ├── pages/                 # Startseite, Spieleauswahl, Spielseite
 ├── score.tsx              # Punkte über alle Spiele
 ├── speech.ts, sound.ts    # Sprachausgabe und Soundeffekte
@@ -67,6 +69,7 @@ src/
 
 - **Leitstelle:** neue Datei `src/games/dispatch/scenarios/<name>.szenario.ts` nach dem Typ `Szenario` (siehe `types.ts`) anlegen und in `scenarios/index.ts` eintragen. Fehlende Ablenker-Kacheln werden automatisch aus anderen Szenarien aufgefüllt.
 - **Gefahr oder sicher?:** neue Gegenstände in `src/games/danger-sort/items.ts` ergänzen.
+- **Das richtige Werkzeug:** neue Einsätze in `src/games/tool-matching/scenarios.ts` ergänzen (Typ `Scenario`, genau ein Werkzeug ist richtig).
 
 ---
 
@@ -83,6 +86,7 @@ A small educational game for children (preschool and primary school age) about f
 | 📞 **Leitstelle** (Dispatch) | You answer emergency calls and have to listen carefully. Answer the five W-questions: **where** did it happen, **what** happened, **how many** people are affected, **which injuries** are there, and the caller **waits for follow-up questions**. Tap the matching tile for each. |
 | ✋🧸 **Gefahr oder sicher?** (Dangerous or safe?) | Items such as a candle, matches or a teddy bear are read aloud. Sort them: is it safe to play with, or for adults only (dangerous)? |
 | 🏃🔥 **Der Weg ins Freie** (The way out) | There is a fire and smoke! Help the child act correctly: smoke rises, so stay low and crawl, go to the door and run to the assembly point. |
+| 🪜🔦 **Das richtige Werkzeug** (The right tool) | A rescue scene is shown and read aloud (fire in a bush, cat in a tree, dark cellar, oil spill …). Tap the matching tool out of 3 and the problem disappears. 5 rounds per game. |
 
 ## How to play
 
@@ -106,4 +110,4 @@ npm run preview   # preview the production build locally
 
 Built with React 19, TypeScript and Vite. The build uses `base: './'` and a hash router, so it can be hosted on any static host (e.g. GitHub Pages) without server configuration.
 
-To add a mini-game, create a folder under `src/games/<name>/` with a default-exported component taking `GameProps`, and register it in `src/games/registry.ts`. To add dispatch scenarios, add a `*.szenario.ts` file in `src/games/dispatch/scenarios/` and register it in `index.ts`. To add items for the sorting game, extend `src/games/danger-sort/items.ts`.
+To add a mini-game, create a folder under `src/games/<name>/` with a default-exported component taking `GameProps`, and register it in `src/games/registry.ts`. To add dispatch scenarios, add a `*.szenario.ts` file in `src/games/dispatch/scenarios/` and register it in `index.ts`. To add items for the sorting game, extend `src/games/danger-sort/items.ts`. To add rescue scenes for the tool game, extend `src/games/tool-matching/scenarios.ts`.

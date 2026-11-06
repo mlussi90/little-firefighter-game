@@ -39,4 +39,12 @@ export const games: GameDefinition[] = [
     color: '#457b9d',
     component: lazy(() => import('./dress-up')),
   },
+  {
+    id: 'tool-matching',
+    title: 'Das richtige Werkzeug',
+    emoji: '🪜🔦',
+    description: 'Feuer, Katze auf dem Baum, dunkler Keller: Welches Werkzeug hilft?',
+    color: '#f4a261',
+    component: lazy(() => import('./tool-matching')),
+  },
 ]

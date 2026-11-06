@@ -1,0 +1,24 @@
+/* Einsatz-Matching: Das richtige Werkzeug */
+.tm { width: 100%; }
+.tm-scene { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem; min-height: 260px; padding: 1rem; border: 6px solid var(--ink); border-radius: var(--radius); box-shadow: 0 8px 0 var(--ink); overflow: hidden; }
+.tm-scene.dark .tm-text { background: #fff; }
+.tm-icon { font-size: 8rem; line-height: 1; transition: transform .6s, opacity .6s; }
+.tm-icon.problem { animation: tm-wobble 1.4s ease-in-out infinite; }
+.tm-icon.problem.gone { animation: none; opacity: 0; transform: scale(.2) rotate(20deg); position: absolute; }
+.tm-icon.solved { animation: pop .6s; }
+.tm-text { font-size: 1.8rem; font-weight: 800; text-align: center; background: rgba(255,255,255,.85); border: 4px solid var(--ink); border-radius: 20px; padding: .2em .7em; }
+@keyframes tm-wobble { 0%, 100% { transform: rotate(-3deg) scale(1); } 50% { transform: rotate(3deg) scale(1.05); } }
+
+.tm-tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 1.4rem; }
+.tm-tool { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; min-height: 150px; padding: .6rem; background: #fff; border: 5px solid var(--ink); border-radius: 22px; box-shadow: 0 6px 0 var(--ink); cursor: pointer; font: inherit; transition: transform .2s, opacity .3s, background .2s; }
+.tm-tool:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 2px 0 var(--ink); }
+.tm-tool:focus-visible { outline: 6px solid #457b9d; outline-offset: 3px; }
+.tm-tool .tm-tool-icon { font-size: 4.2rem; line-height: 1; }
+.tm-tool .tm-tool-name { font-size: 1.2rem; font-weight: 800; text-align: center; }
+.tm-tool.hot { background: #fff6c8; }
+.tm-tool.hint { animation: du-pulse 1s ease-in-out infinite; background: #fff6c8; }
+.tm-tool.wrong { animation: shake .45s; background: #ffe0e0; }
+.tm-tool.right { background: #d6f5dc; transform: scale(1.08); }
+.tm-tool:disabled { cursor: default; }
+.tm-tool.faded { opacity: .35; }
+@media (max-width: 520px) { .tm-icon { font-size: 6rem; } .tm-text { font-size: 1.4rem; } .tm-tool { min-height: 130px; } .tm-tool .tm-tool-icon { font-size: 3.2rem; } }

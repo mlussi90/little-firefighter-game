@@ -13,6 +13,7 @@ Ein kleines Lernspiel für Kinder (Vorschul- und Grundschulalter) rund um Brands
 | 🏃🔥 **Der Weg ins Freie** | Es brennt und es qualmt! Hilf dem Kind, richtig zu handeln: Rauch steigt nach oben, also unten bleiben und krabbeln, zur Tür gehen und zum Sammelplatz laufen. |
 | 🧑‍🚒⛑️ **Ausrüsten** | Alarm! Zieh der Figur die richtige Feuerwehr-Ausrüstung an (Helm, Jacke, Stiefel, Handschuhe). Tippe die Teile an oder zieh sie auf die Figur. Lustige Falsch-Teile wie Badehose oder Partyhut gehören nicht dazu. Sind alle richtigen Teile angezogen, fährt das Feuerwehrauto mit Martinshorn los. |
 | 🪜🔦 **Das richtige Werkzeug** | Ein Einsatz wird gezeigt und vorgelesen (Feuer im Gebüsch, Katze auf dem Baum, dunkler Keller, Ölfleck …). Tippe unter 3 Werkzeugen das passende an. Stimmt es, löst sich das Problem auf. Es werden 5 Runden gespielt. |
+| 🚨👂 **Rauchmelder-Check** | Horch genau! Bei normalen Geräuschen (Hund, Türklingel, Martinshorn, Katze) bleibst du ruhig. Piept der Rauchmelder hoch, tippst du schnell auf den großen grünen Knopf „Rauchmelder! Nach draußen!“. Die Reaktionszeit wird gemessen, ohne Angst zu machen. |
 
 ## So wird gespielt
 
@@ -52,7 +53,8 @@ src/
 │   ├── danger-sort/       # Gefahr oder sicher?
 │   ├── escape-route/      # Der Weg ins Freie
 │   ├── dress-up/          # Ausrüsten
-│   └── tool-matching/     # Das richtige Werkzeug
+│   ├── tool-matching/     # Das richtige Werkzeug
+│   └── smoke-detector-sound/ # Rauchmelder-Check
 ├── pages/                 # Startseite, Spieleauswahl, Spielseite
 ├── score.tsx              # Punkte über alle Spiele
 ├── speech.ts, sound.ts    # Sprachausgabe und Soundeffekte
@@ -70,6 +72,7 @@ src/
 - **Leitstelle:** neue Datei `src/games/dispatch/scenarios/<name>.szenario.ts` nach dem Typ `Szenario` (siehe `types.ts`) anlegen und in `scenarios/index.ts` eintragen. Fehlende Ablenker-Kacheln werden automatisch aus anderen Szenarien aufgefüllt.
 - **Gefahr oder sicher?:** neue Gegenstände in `src/games/danger-sort/items.ts` ergänzen.
 - **Das richtige Werkzeug:** neue Einsätze in `src/games/tool-matching/scenarios.ts` ergänzen (Typ `Scenario`, genau ein Werkzeug ist richtig).
+- **Rauchmelder-Check:** neue Geräusche in `src/games/smoke-detector-sound/tracks.ts` ergänzen. Mit `src` kann eine eigene Audiodatei genutzt werden, sonst wird der Ton per Web Audio erzeugt.
 
 ---
 
@@ -87,6 +90,7 @@ A small educational game for children (preschool and primary school age) about f
 | ✋🧸 **Gefahr oder sicher?** (Dangerous or safe?) | Items such as a candle, matches or a teddy bear are read aloud. Sort them: is it safe to play with, or for adults only (dangerous)? |
 | 🏃🔥 **Der Weg ins Freie** (The way out) | There is a fire and smoke! Help the child act correctly: smoke rises, so stay low and crawl, go to the door and run to the assembly point. |
 | 🪜🔦 **Das richtige Werkzeug** (The right tool) | A rescue scene is shown and read aloud (fire in a bush, cat in a tree, dark cellar, oil spill …). Tap the matching tool out of 3 and the problem disappears. 5 rounds per game. |
+| 🚨👂 **Rauchmelder-Check** (Smoke alarm check) | Listen closely! Stay calm for everyday sounds (dog, doorbell, siren, cat). When the high-pitched smoke alarm beeps, quickly tap the big green "Smoke alarm! Go outside!" button. Reaction time is measured in a friendly, non-scary way. |
 
 ## How to play
 
@@ -110,4 +114,4 @@ npm run preview   # preview the production build locally
 
 Built with React 19, TypeScript and Vite. The build uses `base: './'` and a hash router, so it can be hosted on any static host (e.g. GitHub Pages) without server configuration.
 
-To add a mini-game, create a folder under `src/games/<name>/` with a default-exported component taking `GameProps`, and register it in `src/games/registry.ts`. To add dispatch scenarios, add a `*.szenario.ts` file in `src/games/dispatch/scenarios/` and register it in `index.ts`. To add items for the sorting game, extend `src/games/danger-sort/items.ts`. To add rescue scenes for the tool game, extend `src/games/tool-matching/scenarios.ts`.
+To add a mini-game, create a folder under `src/games/<name>/` with a default-exported component taking `GameProps`, and register it in `src/games/registry.ts`. To add dispatch scenarios, add a `*.szenario.ts` file in `src/games/dispatch/scenarios/` and register it in `index.ts`. To add items for the sorting game, extend `src/games/danger-sort/items.ts`. To add rescue scenes for the tool game, extend `src/games/tool-matching/scenarios.ts`. To add sounds for the smoke alarm game, extend `src/games/smoke-detector-sound/tracks.ts` (set `src` to use your own audio file).

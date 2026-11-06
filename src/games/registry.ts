@@ -47,4 +47,12 @@ export const games: GameDefinition[] = [
     color: '#f4a261',
     component: lazy(() => import('./tool-matching')),
   },
+  {
+    id: 'smoke-detector-sound',
+    title: 'Rauchmelder-Check',
+    emoji: '🚨👂',
+    description: 'Horch genau! Wann piept der Rauchmelder und du musst nach draußen?',
+    color: '#2a9d4f',
+    component: lazy(() => import('./smoke-detector-sound')),
+  },
 ]

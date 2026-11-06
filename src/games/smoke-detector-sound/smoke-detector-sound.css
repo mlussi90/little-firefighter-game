@@ -1,0 +1,21 @@
+/* Rauchmelder-Check */
+.sd { width: 100%; }
+.sd-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem; min-height: 240px; padding: 1rem; background: linear-gradient(#e8f4ff, #cfe6fa); border: 6px solid var(--ink); border-radius: var(--radius); box-shadow: 0 8px 0 var(--ink); text-align: center; }
+.sd-stage.alarm { background: linear-gradient(#fff3d6, #ffe0a8); }
+.sd-ear { font-size: 7rem; line-height: 1; animation: sd-listen 2s ease-in-out infinite; }
+@keyframes sd-listen { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+.sd-text { font-size: 1.8rem; font-weight: 800; }
+.sd-note { font-size: 5rem; line-height: 1; animation: du-pulse .6s ease-in-out infinite; }
+/* Kleines blinkendes Symbol beim Rauchmelder */
+.sd-blink { position: absolute; top: .6rem; right: .8rem; font-size: 2.4rem; animation: du-blink .5s steps(2) infinite; }
+.sd-stage { position: relative; }
+.sd-result { font-size: 5rem; animation: pop .5s; }
+
+.sd-actions { display: flex; flex-direction: column; gap: .9rem; margin-top: 1.4rem; align-items: stretch; }
+.sd-alarm-btn { min-height: 130px; padding: .8rem 1rem; font: inherit; font-size: 2rem; font-weight: 800; color: #fff; background: #2a9d4f; border: 6px solid var(--ink); border-radius: 26px; box-shadow: 0 8px 0 var(--ink); cursor: pointer; }
+.sd-alarm-btn:active:not(:disabled) { transform: translateY(5px); box-shadow: 0 3px 0 var(--ink); }
+.sd-normal-btn { min-height: 80px; font: inherit; font-size: 1.4rem; font-weight: 800; background: #fff; border: 5px solid var(--ink); border-radius: 22px; box-shadow: 0 5px 0 var(--ink); cursor: pointer; }
+.sd-normal-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 var(--ink); }
+.sd-alarm-btn:focus-visible, .sd-normal-btn:focus-visible { outline: 6px solid #457b9d; outline-offset: 3px; }
+button.sd-alarm-btn:disabled, button.sd-normal-btn:disabled { cursor: default; opacity: .6; }
+@media (max-width: 520px) { .sd-ear { font-size: 5rem; } .sd-text { font-size: 1.4rem; } .sd-alarm-btn { font-size: 1.5rem; } }

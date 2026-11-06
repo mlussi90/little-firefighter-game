@@ -11,6 +11,7 @@ Ein kleines Lernspiel für Kinder (Vorschul- und Grundschulalter) rund um Brands
 | 📞 **Leitstelle** | Du nimmst Notrufe an und musst gut zuhören. Beantworte die fünf W-Fragen: **Wo** ist es passiert? **Was** ist passiert? **Wie viele** Personen sind betroffen? **Welche Verletzungen** gibt es? Und: Der Anrufer **wartet auf Rückfragen**. Tippe jeweils die passende Kachel an. |
 | ✋🧸 **Gefahr oder sicher?** | Gegenstände wie Kerze, Streichhölzer oder Teddybär werden vorgelesen. Sortiere sie: Ist das zum Spielen (sicher) oder nur für Erwachsene (gefährlich)? |
 | 🏃🔥 **Der Weg ins Freie** | Es brennt und es qualmt! Hilf dem Kind, richtig zu handeln: Rauch steigt nach oben, also unten bleiben und krabbeln, zur Tür gehen und zum Sammelplatz laufen. |
+| 🧑‍🚒⛑️ **Ausrüsten** | Alarm! Zieh der Figur die richtige Feuerwehr-Ausrüstung an (Helm, Jacke, Stiefel, Handschuhe). Tippe die Teile an oder zieh sie auf die Figur. Lustige Falsch-Teile wie Badehose oder Partyhut gehören nicht dazu. Sind alle richtigen Teile angezogen, fährt das Feuerwehrauto mit Martinshorn los. |
 
 ## So wird gespielt
 
@@ -48,7 +49,8 @@ src/
 │   ├── registry.ts        # Liste aller Minispiele
 │   ├── dispatch/          # Leitstelle (Engine, Szenarien, Anruf-Wiedergabe)
 │   ├── danger-sort/       # Gefahr oder sicher?
-│   └── escape-route/      # Der Weg ins Freie
+│   ├── escape-route/      # Der Weg ins Freie
+│   └── dress-up/          # Ausrüsten
 ├── pages/                 # Startseite, Spieleauswahl, Spielseite
 ├── score.tsx              # Punkte über alle Spiele
 ├── speech.ts, sound.ts    # Sprachausgabe und Soundeffekte

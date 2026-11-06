@@ -31,4 +31,12 @@ export const games: GameDefinition[] = [
     color: '#e76f51',
     component: lazy(() => import('./escape-route')),
   },
+  {
+    id: 'dress-up',
+    title: 'Ausrüsten',
+    emoji: '🧑‍🚒⛑️',
+    description: 'Alarm! Zieh die richtige Feuerwehr-Ausrüstung an!',
+    color: '#457b9d',
+    component: lazy(() => import('./dress-up')),
+  },
 ]
